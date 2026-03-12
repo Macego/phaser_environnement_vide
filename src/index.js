@@ -5,6 +5,9 @@ var player;
 var clavier;
 var carteDuNiveau;
 var calque_plateformes;
+var chronoText;
+var monTimer;
+var chrono = 0;
 
 /***********************************************************************/
 /** CONFIGURATION
@@ -103,6 +106,20 @@ function create() {
     frameRate: 10,
     repeat: -1
   });
+  /*********** Chronomètre ***********/
+chronoText = this.add.text(16, 16, "Chrono: 0", {
+  fontSize: "24px",
+  fill: "#FFFFFF"
+});
+
+chronoText.setScrollFactor(0);
+
+monTimer = this.time.addEvent({
+  delay: 1000,
+  callback: compteUneSeconde,
+  callbackScope: this,
+  loop: true
+});
 }
 
 
@@ -128,3 +145,11 @@ function update() {
     player.setVelocityY(-300);
   }
 } 
+
+function compteUneSeconde() {
+
+  chrono = chrono + 1;
+
+  chronoText.setText("Chrono: " + chrono);
+
+}
