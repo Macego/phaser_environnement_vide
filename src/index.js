@@ -34,7 +34,7 @@ new Phaser.Game(config);
 /***********************************************************************/
 function preload() {
 
-  
+
   this.load.image("tuiles_de_jeu", "src/assets/tuilesJeu.png");
 
   
@@ -56,14 +56,14 @@ function create() {
   carteDuNiveau = this.make.tilemap({ key: "carte" });
 
   const tileset = carteDuNiveau.addTilesetImage(
-    "tuiles_de_jeu",   
+    "tuilesJeu",   
     "tuiles_de_jeu"
   );
 
   
+  carteDuNiveau.createLayer("calque_plateformes", tileset, 0, 0);
   carteDuNiveau.createLayer("calque_background", tileset, 0, 0);
-  carteDuNiveau.createLayer("calque_background_2", tileset, 0, 0);
-  calque_plateformes = carteDuNiveau.createLayer("calque_plateformes", tileset, 0, 0);
+  calque_plateformes = carteDuNiveau.createLayer("calque_background_2", tileset, 0, 0);
 
   
   calque_plateformes.setCollisionByProperty({ estSolide: true });
@@ -105,6 +105,7 @@ function create() {
   });
 }
 
+
 /***********************************************************************/
 /** UPDATE
 /***********************************************************************/
@@ -126,4 +127,4 @@ function update() {
   if (clavier.up.isDown && player.body.blocked.down) {
     player.setVelocityY(-300);
   }
-}
+} 
