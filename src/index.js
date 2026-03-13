@@ -14,6 +14,8 @@ var stopped = false;
 var instructionsText;
 var spawnX = 100;
 var spawnY = 200;
+var alerteTimer;
+var alerteText;
 
 /***********************************************************************/
 /** CONFIGURATION
@@ -80,7 +82,7 @@ function create() {
   
   player = this.physics.add.sprite(spawnX, spawnY, "img_perso");
   player.setBounce(0);
-  player.setCollideWorldBounds(true);
+  player.setCollideWorldBounds(false);
 
   this.physics.add.collider(player, calque_plateformes);
 
@@ -138,6 +140,20 @@ instructionsText.setScrollFactor(0);
 
 bouton_stop_resume = this.input.keyboard.addKey("S");
 bouton_reset = this.input.keyboard.addKey("R");
+
+alerteText = this.add.text(250, 80, "", {
+  fontSize: "28px",
+  fill: "#FF0000"
+});
+
+alerteText.setScrollFactor(0);
+
+alerteTimer = this.time.addEvent({
+  delay: 10000,
+  callback: afficherAlerte,
+  callbackScope: this,
+  loop: true
+});
 }
 
 
@@ -208,8 +224,7 @@ if (player.y > carteDuNiveau.heightInPixels) {
   mortJoueur();
 
 }
-  if (player.y > 700) {
-    mortJoueur();
+
 } 
 
 function compteUneSeconde() {
@@ -227,5 +242,15 @@ function mortJoueur() {
   setTimeout(() => {
     player.setPosition(spawnX, spawnY);
   }, 500);
+
+}
+
+function afficherAlerte() {
+
+  alerteText.setText("⚠ Attention ! Le temps passe...");
+
+  setTimeout(() => {
+    alerteText.setText("");
+  }, 3000);
 
 }
