@@ -8,6 +8,10 @@ var calque_plateformes;
 var chronoText;
 var monTimer;
 var chrono = 0;
+var bouton_stop_resume;
+var bouton_reset;
+var stopped = false;
+var instructionsText;
 
 /***********************************************************************/
 /** CONFIGURATION
@@ -120,6 +124,18 @@ monTimer = this.time.addEvent({
   callbackScope: this,
   loop: true
 });
+
+instructionsText = this.add.text(16, 40,
+"S : stopper / relancer le chrono\nR : reinitialiser le chrono",
+{
+  fontSize: "20px",
+  fill: "#FFFFFF"
+});
+
+instructionsText.setScrollFactor(0);
+
+bouton_stop_resume = this.input.keyboard.addKey("S");
+bouton_reset = this.input.keyboard.addKey("R");
 }
 
 
@@ -144,6 +160,45 @@ function update() {
   if (clavier.up.isDown && player.body.blocked.down) {
     player.setVelocityY(-300);
   }
+
+  // reset du chrono (bouton R)
+if (Phaser.Input.Keyboard.JustDown(bouton_reset)) {
+
+  chrono = 0;
+  chronoText.setText("Chrono: " + chrono);
+
+  monTimer.reset({
+    delay: 1000,
+    callback: compteUneSeconde,
+    callbackScope: this,
+    loop: true
+  });
+
+}
+
+
+// pause / reprise (bouton S)
+if (Phaser.Input.Keyboard.JustDown(bouton_stop_resume)) {
+
+  if (stopped == false) {
+
+    monTimer.reset({ paused: true });
+    stopped = true;
+
+  } else {
+
+    monTimer.reset({
+      delay: 1000,
+      callback: compteUneSeconde,
+      callbackScope: this,
+      loop: true
+    });
+
+    stopped = false;
+
+  }
+
+}
 } 
 
 function compteUneSeconde() {
