@@ -12,6 +12,8 @@ var bouton_stop_resume;
 var bouton_reset;
 var stopped = false;
 var instructionsText;
+var spawnX = 100;
+var spawnY = 200;
 
 /***********************************************************************/
 /** CONFIGURATION
@@ -76,7 +78,7 @@ function create() {
   calque_plateformes.setCollisionByProperty({ estSolide: true });
 
   
-  player = this.physics.add.sprite(100, 200, "img_perso");
+  player = this.physics.add.sprite(spawnX, spawnY, "img_perso");
   player.setBounce(0);
   player.setCollideWorldBounds(true);
 
@@ -160,6 +162,7 @@ function update() {
   if (clavier.up.isDown && player.body.blocked.down) {
     player.setVelocityY(-300);
   }
+  
 
   // reset du chrono (bouton R)
 if (Phaser.Input.Keyboard.JustDown(bouton_reset)) {
@@ -199,6 +202,14 @@ if (Phaser.Input.Keyboard.JustDown(bouton_stop_resume)) {
   }
 
 }
+
+if (player.y > carteDuNiveau.heightInPixels) {
+
+  mortJoueur();
+
+}
+  if (player.y > 700) {
+    mortJoueur();
 } 
 
 function compteUneSeconde() {
@@ -206,5 +217,15 @@ function compteUneSeconde() {
   chrono = chrono + 1;
 
   chronoText.setText("Chrono: " + chrono);
+
+}
+
+function mortJoueur() {
+
+  player.setVelocity(0,0);
+
+  setTimeout(() => {
+    player.setPosition(spawnX, spawnY);
+  }, 500);
 
 }
