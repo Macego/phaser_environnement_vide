@@ -20,6 +20,9 @@ var nombreDeSauts = 0;
 var meilleurScore = 0;
 var scoreText;
 var zoneFin;
+var scene;
+scene = this;
+
 
 
 
@@ -88,7 +91,7 @@ function create() {
   
   player = this.physics.add.sprite(spawnX, spawnY, "img_perso");
   player.setBounce(0);
-  player.setCollideWorldBounds(true);
+  player.setCollideWorldBounds(false);
 
   zoneFin = this.add.zone(3155, 136, 60, 80);
 this.physics.world.enable(zoneFin);
@@ -304,22 +307,19 @@ function afficherAlerte() {
 }
 
 function niveauTermine() {
-  // Stoppe le chrono
   monTimer.remove();
 
-  // Calcul du score final
   var score = Math.max(0, 1000 - chrono * 10);
   if (score > meilleurScore) {
     meilleurScore = score;
+    scoreText.setText("Meilleur score: " + meilleurScore); // ← bug 3 réglé ici aussi
   }
 
-  // Stoppe le joueur
   player.setVelocity(0, 0);
   player.setActive(false);
   player.setVisible(false);
 
-  // Message de victoire
-  var texteVictoire = this.add.text(250, 250,
+  var texteVictoire = scene.add.text(250, 250,  // ← scene au lieu de this
     "🎉 Niveau terminé !\nTemps : " + chrono + "s\nScore : " + score,
     {
       fontSize: "32px",
@@ -328,4 +328,16 @@ function niveauTermine() {
     }
   );
   texteVictoire.setScrollFactor(0);
+
+  // Touche Entrée pour relancer
+  scene.input.keyboard.once("keydown-ENTER", () => {
+    scene.scene.restart();
+    chrono = 0;
+    meilleurScore = meilleurScore; // on garde le meilleur score
+  });
+
+  scene.add.text(250, 340, "Appuie sur ENTRÉE pour rejouer", {
+    fontSize: "20px",
+    fill: "#FFFFFF"
+  }).setScrollFactor(0);
 }
