@@ -280,7 +280,6 @@ function compteUneSeconde() {
 
 function mortJoueur() {
 
-
   player.setVelocity(0, 0);
 
   setTimeout(() => {
@@ -288,15 +287,7 @@ function mortJoueur() {
     chrono = 0;
     chronoText.setText("Chrono: 0");
   }, 500);
-}
-  player.setVelocity(0, 0);
 
-  setTimeout(() => {
-    player.setPosition(spawnX, spawnY);
-    // Reset du chrono à la mort
-    chrono = 0;
-    chronoText.setText("Chrono: 0");
-  }, 500);
 }
 
 function afficherAlerte() {
