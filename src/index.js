@@ -20,6 +20,7 @@ var nombreDeSauts = 0;
 var meilleurScore = 0;
 var scoreText;
 var zoneFin;
+var debugCoordsText;
 
 
 /***********************************************************************/
@@ -89,7 +90,7 @@ function create() {
   player.setBounce(0);
   player.setCollideWorldBounds(true);
 
-  zoneFin = this.add.zone(1700, 200, 120, 100);
+  zoneFin = this.add.zone(1700, 200, 60, 80);
 this.physics.world.enable(zoneFin);
 zoneFin.body.setAllowGravity(false);
 zoneFin.body.setImmovable(true);
@@ -98,6 +99,12 @@ this.physics.add.overlap(player, zoneFin, niveauTermine, null, this);
 
 
 var debugZone = this.add.rectangle(1700, 200, 60, 80, 0x00ff00, 0.4);
+
+debugCoordsText = this.add.text(16, 100, "", {
+  fontSize: "18px",
+  fill: "#00FF00"
+});
+debugCoordsText.setScrollFactor(0);
 
 
 
@@ -223,6 +230,8 @@ if (Phaser.Input.Keyboard.JustDown(bouton_reset)) {
   });
 
 }
+
+debugCoordsText.setText("x: " + Math.floor(player.x) + "  y: " + Math.floor(player.y));
 
 
 // pause / reprise (bouton S)
