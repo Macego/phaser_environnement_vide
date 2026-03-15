@@ -16,6 +16,10 @@ var spawnX = 100;
 var spawnY = 200;
 var alerteTimer;
 var alerteText;
+var nombreDeSauts = 0;
+var meilleurScore = 0;
+var scoreText;
+
 
 /***********************************************************************/
 /** CONFIGURATION
@@ -82,7 +86,7 @@ function create() {
   
   player = this.physics.add.sprite(spawnX, spawnY, "img_perso");
   player.setBounce(0);
-  player.setCollideWorldBounds(false);
+  player.setCollideWorldBounds(true);
 
   this.physics.add.collider(player, calque_plateformes);
 
@@ -121,6 +125,12 @@ chronoText = this.add.text(16, 16, "Chrono: 0", {
 });
 
 chronoText.setScrollFactor(0);
+
+scoreText = this.add.text(16, 70, "Meilleur score: --", {
+  fontSize: "20px",
+  fill: "#FFD700"
+});
+scoreText.setScrollFactor(0);
 
 monTimer = this.time.addEvent({
   delay: 1000,
@@ -175,10 +185,16 @@ function update() {
     player.anims.play("anim_idle", true);
   }
 
-  if (clavier.up.isDown && player.body.blocked.down) {
-    player.setVelocityY(-300);
-  }
-  
+ if (Phaser.Input.Keyboard.JustDown(clavier.up) && nombreDeSauts < 2) {
+
+  player.setVelocityY(-300);
+  nombreDeSauts++;
+
+}
+
+if (player.body.blocked.down) {
+  nombreDeSauts = 0;
+}  
 
   // reset du chrono (bouton R)
 if (Phaser.Input.Keyboard.JustDown(bouton_reset)) {
@@ -220,9 +236,17 @@ if (Phaser.Input.Keyboard.JustDown(bouton_stop_resume)) {
 }
 
 if (player.y > carteDuNiveau.heightInPixels) {
-
   mortJoueur();
+}
 
+// Sortie par la gauche ou la droite → respawn
+if (player.x < 0 || player.x > carteDuNiveau.widthInPixels) {
+  mortJoueur();
+}
+
+// Sortie par le haut (très rare mais possible)
+if (player.y < 0) {
+  player.setVelocityY(0);
 }
 
 } 
@@ -236,13 +260,23 @@ function compteUneSeconde() {
 }
 
 function mortJoueur() {
+  // Calcul du score : plus le chrono est bas, plus le score est élevé
+  if (chrono > 0) {
+    var score = Math.max(0, 1000 - chrono * 10);
+    if (score > meilleurScore) {
+      meilleurScore = score;
+      scoreText.setText("Meilleur score: " + meilleurScore);
+    }
+  }
 
-  player.setVelocity(0,0);
+  player.setVelocity(0, 0);
 
   setTimeout(() => {
     player.setPosition(spawnX, spawnY);
+    // Reset du chrono à la mort
+    chrono = 0;
+    chronoText.setText("Chrono: 0");
   }, 500);
-
 }
 
 function afficherAlerte() {
