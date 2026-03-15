@@ -19,6 +19,7 @@ var alerteText;
 var nombreDeSauts = 0;
 var meilleurScore = 0;
 var scoreText;
+var zoneFin;
 
 
 /***********************************************************************/
@@ -87,6 +88,18 @@ function create() {
   player = this.physics.add.sprite(spawnX, spawnY, "img_perso");
   player.setBounce(0);
   player.setCollideWorldBounds(true);
+
+  zoneFin = this.add.zone(1700, 200, 120, 100);
+this.physics.world.enable(zoneFin);
+zoneFin.body.setAllowGravity(false);
+zoneFin.body.setImmovable(true);
+
+this.physics.add.overlap(player, zoneFin, niveauTermine, null, this);
+
+
+var debugZone = this.add.rectangle(1700, 200, 60, 80, 0x00ff00, 0.4);
+
+
 
   this.physics.add.collider(player, calque_plateformes);
 
@@ -287,4 +300,31 @@ function afficherAlerte() {
     alerteText.setText("");
   }, 3000);
 
+}
+
+function niveauTermine() {
+  // Stoppe le chrono
+  monTimer.remove();
+
+  // Calcul du score final
+  var score = Math.max(0, 1000 - chrono * 10);
+  if (score > meilleurScore) {
+    meilleurScore = score;
+  }
+
+  // Stoppe le joueur
+  player.setVelocity(0, 0);
+  player.setActive(false);
+  player.setVisible(false);
+
+  // Message de victoire
+  var texteVictoire = this.add.text(250, 250,
+    "🎉 Niveau terminé !\nTemps : " + chrono + "s\nScore : " + score,
+    {
+      fontSize: "32px",
+      fill: "#FFD700",
+      align: "center"
+    }
+  );
+  texteVictoire.setScrollFactor(0);
 }
