@@ -21,7 +21,7 @@ var meilleurScore = 0;
 var scoreText;
 var zoneFin;
 var scene;
-scene = this;
+
 
 
 
@@ -71,6 +71,8 @@ function preload() {
 /** CREATE
 /***********************************************************************/
 function create() {
+
+  scene = this;
 
   /*********** Carte ***********/
   carteDuNiveau = this.make.tilemap({ key: "carte" });
@@ -277,15 +279,16 @@ function compteUneSeconde() {
 }
 
 function mortJoueur() {
-  // Calcul du score : plus le chrono est bas, plus le score est élevé
-  if (chrono > 0) {
-    var score = Math.max(0, 1000 - chrono * 10);
-    if (score > meilleurScore) {
-      meilleurScore = score;
-      scoreText.setText("Meilleur score: " + meilleurScore);
-    }
-  }
 
+
+  player.setVelocity(0, 0);
+
+  setTimeout(() => {
+    player.setPosition(spawnX, spawnY);
+    chrono = 0;
+    chronoText.setText("Chrono: 0");
+  }, 500);
+}
   player.setVelocity(0, 0);
 
   setTimeout(() => {
